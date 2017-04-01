@@ -14,7 +14,7 @@ create table Customer
 	Phone nvarchar(20),
 	Fax nvarchar(20),
 	Email nvarchar(50),
-	Overdue int NOT NULL,
+	Overdue int default 0,
 	Amount decimal(13,1),
 	OverdueAmt decimal(13,1),
 	DueAmt decimal(13,1), 
