@@ -30,9 +30,8 @@ create table InvoiceType
 go
 create table Unit
 (
-	UnitID int primary key,
+	UnitID int identity(1,1) primary key,
 	UnitName nvarchar(50)
-	
 )
 go
 create table SalesPerson
