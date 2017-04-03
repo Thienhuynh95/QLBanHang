@@ -34,16 +34,57 @@ create table Unit
 	UnitName nvarchar(50)
 )
 go
+create table GroupUser
+(
+	GroupID int identity(1,1) primary key,
+	GroupName nvarchar(20)
+)
+go
+create table Users
+(
+	UserID int identity(1,1) NOT NULL primary key,
+	UserName nvarchar(20) NOT NULL,
+	Pass nvarchar(30) NOT NULL,
+	GroupID int NOT NULL references GroupUser(GroupID)
+)
+go
 create table SalesPerson
 (
-	SalesPersonID int identity(1,1) primary key,
+	SalesPersonID int references Users(UserID),
 	SalesPersonName nvarchar(50) NOT NULL,
 	Addres nvarchar(50),
 	Phone nvarchar(20),
 	Email nvarchar(50),
+	StartDate Date,
+	Pos nvarchar(2) check(Pos = 'NV' OR Pos = 'TP'),
 	Salary float,
-	Pos nvarchar(20) check (Pos = N'Trưởng Phòng' OR Pos = N'Nhân viên'),
-	LimitEarning int,
+	LimitEarning bigint,
+	Stat nvarchar(2) check (Stat = 'DE'OR Stat='AV' OR Stat = 'UA'),
+	Descript nvarchar(200)
+)
+go
+create table Accountant
+(
+	AccID int references Users(UserID),
+	AccName nvarchar(50) NOT NULL,
+	Addres nvarchar(50),
+	Phone nvarchar(20),
+	Email nvarchar(50),
+	StartDate Date,
+	Salary float,
+	Stat nvarchar(2) check (Stat = 'DE'OR Stat='AV' OR Stat = 'UA'),
+	Descript nvarchar(200)
+)
+go
+create table StoreKeeper
+(
+	SKID int references Users(UserID),
+	SKName nvarchar(50) NOT NULL,
+	Addres nvarchar(50),
+	Phone nvarchar(20),
+	Email nvarchar(50),
+	StartDate Date,
+	Salary float,
 	Stat nvarchar(2) check (Stat = 'DE'OR Stat='AV' OR Stat = 'UA'),
 	Descript nvarchar(200)
 )
@@ -62,20 +103,7 @@ create table Vendor
 	Stat nvarchar(2) check (Stat = 'DE'OR Stat='AV' OR Stat = 'UA'),
 	Descript nvarchar(200)
 )
-go
-create table GroupUser
-(
-	GroupID int identity(1,1) primary key,
-	GroupName nvarchar(20)
-)
-go
-create table Users
-(
-	UserID int identity(1,1) NOT NULL references SalesPerson(SalesPersonID),
-	UserName nvarchar(20) NOT NULL,
-	Pass nvarchar(30) NOT NULL,
-	GroupID int NOT NULL references GroupUser(GroupID)
-)
+
 go
 create table Inventory
 (
@@ -126,11 +154,11 @@ go
 create table Payment
 (
 	PaymentID int identity(1,1) primary key,
-	PaymentNo nvarchar(20) NOT NULL,
+	PaymentNo nvarchar(20) NOT NULL references SalesOrder(OrderNo),
 	PaymentDate Date,
 	PaymentAmt decimal(13,1),
 	CustID nvarchar(20) foreign key references Customer(CustID),
-	SalesPersonID int NOT NULL foreign key references SalesPerson(SalesPersonID),
+	SalesPersonID int NOT NULL foreign key references Users(UserID),
 	Descript nvarchar(200),
 	Del int default 0
 )
